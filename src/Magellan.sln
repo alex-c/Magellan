@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magellan", "Magellan\Magellan.csproj", "{42C53C68-13C9-4DAA-83CD-06CFE9FEAC4F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1BF08C18-B04B-47F1-B2BD-D644192C6EAB}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magellan.Tests", "Magellan.Tests\Magellan.Tests.csproj", "{1AD7A268-7814-4B52-8618-05AAEB020F2B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{42C53C68-13C9-4DAA-83CD-06CFE9FEAC4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42C53C68-13C9-4DAA-83CD-06CFE9FEAC4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42C53C68-13C9-4DAA-83CD-06CFE9FEAC4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42C53C68-13C9-4DAA-83CD-06CFE9FEAC4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AD7A268-7814-4B52-8618-05AAEB020F2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AD7A268-7814-4B52-8618-05AAEB020F2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AD7A268-7814-4B52-8618-05AAEB020F2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AD7A268-7814-4B52-8618-05AAEB020F2B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {74146340-02B8-4E4B-854B-7167654EA2F5}
+	EndGlobalSection
+EndGlobal
