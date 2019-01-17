@@ -1,6 +1,8 @@
 using Consul;
+using Magellan.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Magellan.Tests
@@ -50,7 +52,19 @@ namespace Magellan.Tests
                 {
                     Name = "test-service",
                     ID = "test-service-2",
-                    Port = 6000
+                    Port = 6001,
+                },
+                new AgentServiceRegistration()
+                {
+                    Name = "test-service",
+                    ID = "test-service-3",
+                    Port = 6002,
+                    Check = new AgentServiceCheck()
+                    {
+                        HTTP = "http://168.255.255.255:7000",
+                        Interval = new TimeSpan(0, 1, 0),
+                        Status = HealthStatus.Critical
+                    }
                 }
             };
         }
@@ -80,11 +94,77 @@ namespace Magellan.Tests
             }
 
         }
-        
+
+        /// <summary>
+        /// Tests MagellanClient.GetServiceInstances.
+        /// </summary>
         [TestMethod]
-        public void TestMethod()
+        public void GetAllInstancesOfAService()
         {
+            //Query for service instances
+            ICollection<ServiceInstanceDescriptor> serviceInstances = MagellanClient.GetServiceInstances(new ServiceInstanceQuery()
+            {
+                Service = "test-service"
+            });
+
+            //Expected service instances
+            IEnumerable<AgentServiceRegistration> expectedInstances = Services.Where(s => s.Name == "test-service" && s.Check == null);
+
+            //Check that the right amount of service instances was returned
+            Assert.AreEqual(expectedInstances.Count(), serviceInstances.Count);
+
+            //Check whether the right service instances were returned
+            foreach (AgentServiceRegistration expectedInstance in expectedInstances)
+            {
+                Assert.IsTrue(serviceInstances.Where(si => si.InstanceId == expectedInstance.ID).Count() == 1);
+            }
+        }
+
+        /// <summary>
+        /// Tests MagellanClient.GetServiceInstances for an unknown service.
+        /// </summary>
+        [TestMethod]
+        public void GetAllInstancesOfAnUnknownService()
+        {
+            ICollection<ServiceInstanceDescriptor> serviceInstances = MagellanClient.GetServiceInstances(new ServiceInstanceQuery()
+            {
+                Service = "super-service-of-doom"
+            });
+
+            Assert.AreEqual(0, serviceInstances.Count);
+        }
+
+        /// <summary>
+        /// Tests MagellanClient.GetServiceInstance in the positive case.
+        /// </summary>
+        [TestMethod]
+        public void GetAnInstanceOfAService()
+        {
+            //Query for a service instance
+            ServiceInstanceDescriptor serviceInstance = MagellanClient.GetServiceInstance(new ServiceInstanceQuery()
+            {
+                Service = "test-service"
+            });
+
+            //Possible service instances
+            IEnumerable<AgentServiceRegistration> possibleInstances = Services.Where(s => s.Name == "test-service" && s.Check == null);
             
+            //Check whether a valid service instance was returned
+            Assert.IsTrue(possibleInstances.Where(pi => pi.ID == serviceInstance.InstanceId).Count() == 1);
+        }
+
+        /// <summary>
+        /// Tests MagellanClient.GetServiceInstance in the negative case.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(NoAvailableServiceInstanceException))]
+        public void GetAnInstanceOfAnUnknownService()
+        {
+            //Query for a service instance
+            ServiceInstanceDescriptor serviceInstance = MagellanClient.GetServiceInstance(new ServiceInstanceQuery()
+            {
+                Service = "super-service-of-doom"
+            });
         }
     }
 }
