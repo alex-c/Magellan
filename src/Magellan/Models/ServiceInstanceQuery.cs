@@ -5,7 +5,7 @@ namespace Magellan.Models
     /// <summary>
     /// A query used to retrieve available instances of a given service.
     /// </summary>
-    public class ServiceQuery
+    public class ServiceInstanceQuery
     {
         /// <summary>
         /// Identifies the service to retrieve available instances for.

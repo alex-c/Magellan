@@ -26,5 +26,10 @@ namespace Magellan.Models
         /// Tags associated with the service instance to register.
         /// </summary>
         public ISet<string> Tags { get; set; }
+
+        /// <summary>
+        /// Data center - default to Consul default 'dc1'.
+        /// </summary>
+        public string DataCenter { get; set; } = "dc1";
     }
 }
