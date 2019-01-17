@@ -1,4 +1,5 @@
 ﻿using Magellan.Models;
+using System.Collections.Generic;
 
 namespace Magellan.ServiceSelection
 {
@@ -11,6 +12,6 @@ namespace Magellan.ServiceSelection
         /// Selects a service instance from several available instances.
         /// </summary>
         /// <returns>Returns the selected service instance.</returns>
-        ServiceInstanceDescriptor SelectServiceInstance();
+        ServiceInstanceDescriptor SelectServiceInstance(ICollection<ServiceInstanceDescriptor> serviceInstances);
     }
 }

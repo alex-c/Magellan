@@ -1,5 +1,7 @@
 ﻿using Magellan.Models;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Magellan.ServiceSelection
 {
@@ -25,10 +27,9 @@ namespace Magellan.ServiceSelection
         /// Selects a random service instance from several available instances.
         /// </summary>
         /// <returns></returns>
-        public ServiceInstanceDescriptor SelectServiceInstance()
+        public ServiceInstanceDescriptor SelectServiceInstance(ICollection<ServiceInstanceDescriptor> serviceInstances)
         {
-            //TODO: implement RandomServiceInstanceSelectionStrategy
-            throw new NotImplementedException();
+            return serviceInstances.ElementAt(RNG.Next(0, serviceInstances.Count));
         }
     }
 }
