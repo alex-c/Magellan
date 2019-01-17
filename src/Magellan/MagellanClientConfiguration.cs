@@ -1,7 +1,9 @@
-﻿namespace Magellan
+﻿using Magellan.ServiceSelection;
+
+namespace Magellan
 {
     /// <summary>
-    /// Configuration for the Magellan client.
+    /// Configuration options for a Magellan client.
     /// </summary>
     public class MagellanClientConfiguration
     {
@@ -14,5 +16,10 @@
         /// Port of the HTTP interface of the Consul agent to connect to.
         /// </summary>
         public int ConsulAgentPort { get; set; } = 8500;
+
+        /// <summary>
+        /// Default strategy used to select a service instance from several available service instances of a given service.
+        /// </summary>
+        public ServiceInstanceSelectionStrategy DefaultServiceInstanceSelectionStrategy { get; set; } = ServiceInstanceSelectionStrategy.RandomServiceInstanceSelection;
     }
 }
