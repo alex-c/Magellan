@@ -15,6 +15,6 @@ namespace Magellan.Models
         /// <summary>
         /// Tags used to filter available service instances with.
         /// </summary>
-        public List<string> Tags { get; set; }
+        public HashSet<string> Tags { get; set; } = new HashSet<string>();
     }
 }

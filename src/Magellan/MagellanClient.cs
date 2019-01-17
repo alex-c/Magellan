@@ -2,6 +2,7 @@
 using Magellan.Models;
 using Magellan.ServiceSelection;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Magellan
@@ -11,6 +12,9 @@ namespace Magellan
     /// </summary>
     public class MagellanClient
     {
+        /// <summary>
+        /// Consul client internally used to communicate with the Consul client.
+        /// </summary>
         private ConsulClient Consul { get; }
 
         /// <summary>
@@ -57,12 +61,48 @@ namespace Magellan
         /// <summary>
         /// Queries the local Consul agent for healthy instances of a given service and selects one such instance.
         /// </summary>
-        /// <param name="query">Query to find services instances with.</param>
+        /// <param name="query">Query used to find services instances.</param>
+        /// <exception cref="NoAvailableServiceInstanceException">Thrown when there is no healthy instance available for that service.</exception>
         /// <returns>Returns a service instance.</returns>
-        public ServiceInstanceDescriptor GetServiceInstance(ServiceInstanceQuery query)
+        public ServiceInstanceDescriptor GetServiceInstance(ServiceInstanceQuery query, ServiceInstanceSelectionStrategy? strategy = null)
         {
-            //TODO: implement QueryService
-            throw new NotImplementedException();
+            IServiceInstanceSelectionStrategy selectionStrategy = null;
+            if (strategy.HasValue)
+            {
+                selectionStrategy = InitializeServiceInstanceSelectionStrategy(strategy.Value);
+            }
+            else
+            {
+                selectionStrategy = DefaultServiceInstanceSelectionStrategy;
+            }
+            if (selectionStrategy == null)
+            {
+                throw new MagellanException("Could not initialize any service instance selection strategy.");
+            }
+
+            //Query for available instances
+            ICollection<ServiceInstanceDescriptor> availableInstances = GetServiceInstances(query);
+
+            //Select instance
+            if (availableInstances.Count > 0)
+            {
+                return selectionStrategy.SelectServiceInstance(availableInstances);
+            }
+            else
+            {
+                throw new NoAvailableServiceInstanceException();
+            }
+        }
+
+        /// <summary>
+        /// Queries the local Consul agent for all healthy instances of a given service.
+        /// </summary>
+        /// <param name="query">Query used to find service instances.</param>
+        /// <returns>Returns all available services</returns>
+        public ICollection<ServiceInstanceDescriptor> GetServiceInstances(ServiceInstanceQuery query)
+        {
+            ServiceEntry[] serviceInstances = Consul.Health.Service(query.Service, "",  true).Result.Response;
+            return serviceInstances.Select(si => new ServiceInstanceDescriptor(si.Service)).ToList();
         }
 
         #region Privat helper methods

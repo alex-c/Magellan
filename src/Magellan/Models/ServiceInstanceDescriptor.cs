@@ -1,4 +1,6 @@
-﻿namespace Magellan.Models
+﻿using Consul;
+
+namespace Magellan.Models
 {
     /// <summary>
     /// Describes a service instance.
@@ -24,5 +26,17 @@
         /// Port of the described service instance.
         /// </summary>
         public int Port { get; set; }
+
+        /// <summary>
+        /// Initializes a descriptor from a Consul.NET agent service.
+        /// </summary>
+        /// <param name="service"></param>
+        public ServiceInstanceDescriptor(AgentService service)
+        {
+            Service = service.Service;
+            InstanceId = service.ID;
+            Host = service.Address;
+            Port = service.Port;
+        }
     }
 }
